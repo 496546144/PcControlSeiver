@@ -38,7 +38,6 @@ public class LinkRunnable implements Runnable {
                 while ((info = buffR.readLine()) != null) {
                     System.out.println("我是服务器，客户端说：" + info);
                     stringBuffer.append(info);
-                    stringBuffer.append("\n");
                     if (onReadDataListener != null) {
                         onReadDataListener.onRead(clientName, stringBuffer);
                     }
