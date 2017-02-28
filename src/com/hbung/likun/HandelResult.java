@@ -22,15 +22,13 @@ public class HandelResult {
         if (s == null || s.equals("scan")) return;
         JavaBean javaBean = jsonHelp.get(s.toString());
         if (javaBean.action == 1) {//按键
-            press(javaBean.action);
+            press(javaBean.code);
         }
     }
 
     public void press(int keyEvent) {
-//        myRobot.keyPress(KeyEvent.VK_SHIFT);    // 模拟键盘按下shift键
         myRobot.keyPress(keyEvent);        // 模拟键盘按下Q键（小写）
         myRobot.keyRelease(keyEvent);      // 模拟键盘释放Q键
-//        myRobot.keyRelease(KeyEvent.VK_SHIFT);  // 模拟键盘释放shift键
     }
     /**
      *        // 打出一个大写的Q

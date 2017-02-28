@@ -1,3 +1,4 @@
+import com.hbung.likun.ClientInfo;
 import com.hbung.likun.HandelResult;
 import com.hbung.likun.SocketServiceRunable;
 
@@ -14,7 +15,7 @@ public class UI implements ActionListener, SocketServiceRunable.OnCallback {
     private JLabel clienName;
     private JScrollPane jScrollPane;
     ExecutorService executorService = null;
-    HandelResult handelResult ;
+    HandelResult handelResult;
     SocketServiceRunable socketServiceRunable = null;
 
     public static void main(String[] args) {
@@ -52,11 +53,11 @@ public class UI implements ActionListener, SocketServiceRunable.OnCallback {
 
 
     @Override
-    public void onRead(String name, StringBuffer s) {
-        textPane.setText(s.toString() + "\n");
-        clienName.setText(name);
+    public synchronized void onRead(ClientInfo clientInfo) {
+        textPane.setText(clientInfo.getAllMessage().toString());
+        clienName.setText(clientInfo.getGroupName());
         postBottom();
-        handelResult.handel(s.toString());
+        handelResult.handel(clientInfo.getNewMessage());
     }
 
     private void postBottom() {
@@ -68,7 +69,6 @@ public class UI implements ActionListener, SocketServiceRunable.OnCallback {
     public void clientLink(Runnable runnable) {
         executorService.execute(runnable);
     }
-
 
 
     @Override

@@ -13,6 +13,7 @@ public class LinkRunnable implements Runnable {
     StringBuffer stringBuffer = new StringBuffer();
     OnReadDataListener onReadDataListener;
     String clientName;
+    ClientInfo clientInfo;
 
     public void setOnReadDataListener(OnReadDataListener onReadDataListener) {
         this.onReadDataListener = onReadDataListener;
@@ -20,8 +21,10 @@ public class LinkRunnable implements Runnable {
 
     public LinkRunnable(Socket socket) {
         this.socket = socket;
+        clientInfo = new ClientInfo();
         address = socket.getInetAddress();//获取客户端地址
-        clientName = address.getHostName() + " ip:" + address.getHostAddress() + "\n";
+        clientInfo.setIp(address.getHostAddress());
+        clientInfo.setName(address.getHostName());
     }
 
     @Override
@@ -37,9 +40,9 @@ public class LinkRunnable implements Runnable {
                 String info = null;
                 while ((info = buffR.readLine()) != null) {
                     System.out.println("我是服务器，客户端说：" + info);
-                    stringBuffer.append(info);
+                    clientInfo.addMessage(info);
                     if (onReadDataListener != null) {
-                        onReadDataListener.onRead(clientName, stringBuffer);
+                        onReadDataListener.onRead(clientInfo);
                     }
                 }
             }
@@ -61,7 +64,7 @@ public class LinkRunnable implements Runnable {
     }
 
     public interface OnReadDataListener {
-        void onRead(String name, StringBuffer s);
+        void onRead(ClientInfo clientInfo);
     }
 
 

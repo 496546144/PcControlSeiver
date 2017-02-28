@@ -49,8 +49,9 @@ public class SocketServiceRunable implements Runnable, LinkRunnable.OnReadDataLi
     }
 
     @Override
-    public void onRead(String clienName, StringBuffer s) {
-        if (callback != null) callback.onRead(clienName, s);
+    public void onRead(ClientInfo clientInfo) {
+        if (callback != null)
+            callback.onRead(clientInfo);
     }
 
     public interface OnCallback {
@@ -58,7 +59,7 @@ public class SocketServiceRunable implements Runnable, LinkRunnable.OnReadDataLi
 
         void onStop();
 
-        void onRead(String name, StringBuffer s);
+        void onRead(ClientInfo clientInfo);
 
         void clientLink(Runnable runnable);
     }
