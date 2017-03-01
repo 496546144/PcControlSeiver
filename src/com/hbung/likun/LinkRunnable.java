@@ -10,9 +10,7 @@ import java.net.Socket;
 public class LinkRunnable implements Runnable {
     Socket socket;
     InetAddress address;
-    StringBuffer stringBuffer = new StringBuffer();
     OnReadDataListener onReadDataListener;
-    String clientName;
     ClientInfo clientInfo;
 
     public void setOnReadDataListener(OnReadDataListener onReadDataListener) {
@@ -36,19 +34,21 @@ public class LinkRunnable implements Runnable {
             is = socket.getInputStream();
             os = socket.getOutputStream();
             buffR = new BufferedReader(new InputStreamReader(is));
-            while (true) {//读取数据
-                String info = null;
-                while ((info = buffR.readLine()) != null) {
-                    System.out.println("我是服务器，客户端说：" + info);
-                    clientInfo.addMessage(info);
-                    if (onReadDataListener != null) {
+            String info = null;
+            while ((info = buffR.readLine()) != null) {
+                System.out.println("客户端说：" + info);
+                clientInfo.addMessage(info);
+                if (onReadDataListener != null) {
+                    if (onReadDataListener.isStart()) {
                         onReadDataListener.onRead(clientInfo);
+                    } else {
+                        break;
                     }
                 }
             }
-
         } catch (IOException e) {
             e.printStackTrace();
+            System.out.println("客户端" + clientInfo.getName() + "已经断开连接");
         } finally {
             try {
                 if (is != null)
@@ -57,14 +57,41 @@ public class LinkRunnable implements Runnable {
                     os.close();
                 if (buffR != null)
                     buffR.close();
+                close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
+    public void close() throws IOException {
+        //断开连接
+        if (socket != null) {
+            send("stop");
+            socket.close();
+            socket = null;
+        }
+    }
+
+    public void send(String message) {
+        if (socket != null) {
+            PrintWriter printWriter = null;
+            try {
+                printWriter = new PrintWriter(socket.getOutputStream(), true);
+                printWriter.write(message);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (printWriter != null)
+                    printWriter.close();
+            }
+        }
+    }
+
     public interface OnReadDataListener {
         void onRead(ClientInfo clientInfo);
+
+        boolean isStart();
     }
 
 

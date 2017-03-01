@@ -56,13 +56,7 @@ public class UI implements ActionListener, SocketServiceRunable.OnCallback {
     public synchronized void onRead(ClientInfo clientInfo) {
         textPane.setText(clientInfo.getAllMessage().toString());
         clienName.setText(clientInfo.getGroupName());
-        postBottom();
         handelResult.handel(clientInfo.getNewMessage());
-    }
-
-    private void postBottom() {
-        JScrollBar scrollBar = jScrollPane.getVerticalScrollBar();
-        scrollBar.setValue(scrollBar.getMaximum());
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.hbung.likun;
 
+import com.hbung.likun.javabean.MoveData;
+
 import java.awt.*;
 
 /**
@@ -20,15 +22,22 @@ public class HandelResult {
 
     public void handel(String s) {
         if (s == null || s.equals("scan")) return;
-        JavaBean javaBean = jsonHelp.get(s.toString());
-        if (javaBean.action == 1) {//按键
-            press(javaBean.code);
+        int action = jsonHelp.getAction(s);
+        if (action == 1) {//按键
+            press(jsonHelp.getKeyBean(s).code);
+        } else if (action == 2) {//鼠标移动
+            move(jsonHelp.getMoveData(s));
         }
     }
 
     public void press(int keyEvent) {
         myRobot.keyPress(keyEvent);        // 模拟键盘按下Q键（小写）
         myRobot.keyRelease(keyEvent);      // 模拟键盘释放Q键
+    }
+
+    public void move(MoveData data) {
+        Point point = MouseInfo.getPointerInfo().getLocation();
+        myRobot.mouseMove(point.x + data.distanceX, point.y + data.distanceY);
     }
     /**
      *        // 打出一个大写的Q

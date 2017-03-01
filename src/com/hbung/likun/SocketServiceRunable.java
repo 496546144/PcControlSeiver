@@ -23,7 +23,7 @@ public class SocketServiceRunable implements Runnable, LinkRunnable.OnReadDataLi
             ss = new ServerSocket(1867);
             isStart = true;
             if (callback != null) callback.onStart();
-            while (true) {//等待客户端连接
+            while (ss != null) {//等待客户端连接
                 Socket sk = ss.accept();
                 LinkRunnable runnable = new LinkRunnable(sk);
                 runnable.setOnReadDataListener(SocketServiceRunable.this);
@@ -40,6 +40,7 @@ public class SocketServiceRunable implements Runnable, LinkRunnable.OnReadDataLi
         } else if (ss != null) {
             try {
                 ss.close();
+                ss = null;
                 isStart = false;
                 if (callback != null) callback.onStop();
             } catch (IOException e1) {
@@ -52,6 +53,11 @@ public class SocketServiceRunable implements Runnable, LinkRunnable.OnReadDataLi
     public void onRead(ClientInfo clientInfo) {
         if (callback != null)
             callback.onRead(clientInfo);
+    }
+
+    @Override
+    public boolean isStart() {
+        return isStart;
     }
 
     public interface OnCallback {
