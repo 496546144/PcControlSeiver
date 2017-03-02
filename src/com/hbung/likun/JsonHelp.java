@@ -1,6 +1,7 @@
 package com.hbung.likun;
 
 import com.hbung.likun.javabean.KeyBean;
+import com.hbung.likun.javabean.MouseClickData;
 import com.hbung.likun.javabean.MoveData;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,8 +33,24 @@ public class JsonHelp {
             int action = jsonObject.getInt("action");
             if (action == 2) {
                 bean = new MoveData();
-                bean.distanceX = jsonObject.getInt("distanceX");
-                bean.distanceY = jsonObject.getInt("distanceY");
+                bean.x = jsonObject.getInt("x");
+                bean.y = jsonObject.getInt("y");
+                bean.action = action;
+            }
+        } catch (Exception e) {
+        }
+        return bean;
+    }
+
+    public MouseClickData getMouseClickData(String json) {
+        MouseClickData bean = null;
+        try {
+            JSONObject jsonObject = new JSONObject(json);
+            int action = jsonObject.getInt("action");
+            if (action == 3) {
+                bean = new MouseClickData();
+                bean.setClick(jsonObject.getBoolean("isTopClick"));
+                bean.setLeft(jsonObject.getBoolean("isLeft"));
                 bean.action = action;
             }
         } catch (Exception e) {

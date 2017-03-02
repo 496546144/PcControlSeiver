@@ -1,8 +1,10 @@
 package com.hbung.likun;
 
+import com.hbung.likun.javabean.MouseClickData;
 import com.hbung.likun.javabean.MoveData;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
 
 /**
  * Created by Administrator on 2017/2/28.
@@ -27,6 +29,8 @@ public class HandelResult {
             press(jsonHelp.getKeyBean(s).code);
         } else if (action == 2) {//鼠标移动
             move(jsonHelp.getMoveData(s));
+        } else if (action == 3) {//鼠标点击
+            mouseClick(jsonHelp.getMouseClickData(s));
         }
     }
 
@@ -37,7 +41,17 @@ public class HandelResult {
 
     public void move(MoveData data) {
         Point point = MouseInfo.getPointerInfo().getLocation();
-        myRobot.mouseMove(point.x + data.distanceX, point.y + data.distanceY);
+        myRobot.mouseMove(point.x + data.x, point.y + data.y);
+    }
+
+    public void mouseClick(MouseClickData data) {
+        myRobot.mousePress(data.isLeft() ? KeyEvent.BUTTON1_DOWN_MASK : KeyEvent.BUTTON3_MASK);
+        myRobot.mouseRelease(data.isLeft() ? KeyEvent.BUTTON1_DOWN_MASK : KeyEvent.BUTTON3_MASK);
+        if (!data.isClick()) {
+            myRobot.delay(100);
+            myRobot.mousePress(data.isLeft() ? KeyEvent.BUTTON1_DOWN_MASK : KeyEvent.BUTTON3_MASK);
+            myRobot.mouseRelease(data.isLeft() ? KeyEvent.BUTTON1_DOWN_MASK : KeyEvent.BUTTON3_MASK);
+        }
     }
     /**
      *        // 打出一个大写的Q

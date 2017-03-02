@@ -9,6 +9,6 @@ package com.hbung.likun.javabean;
  */
 
 public class MoveData extends BaseData{
-    public int distanceX;
-    public int distanceY;
+    public int x;
+    public int y;
 }
